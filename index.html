@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>حاسبة بسيطة</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f5f5f5;
+      padding: 30px 15px;
+    }
+
+    .calculator {
+      max-width: 400px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 20px;
+    }
+
+    input {
+      width: 85%;
+      padding: 12px;
+      margin: 8px;
+      font-size: 18px;
+    }
+
+    button {
+      padding: 12px;
+      margin: 5px;
+      font-size: 17px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="calculator">
+
+    <h1>🧮 حاسبة بسيطة</h1>
+
+    <input type="number" id="number1" placeholder="الرقم الأول">
+
+    <input type="number" id="number2" placeholder="الرقم الثاني">
+
+    <div>
+      <button onclick="calculate('+')">➕ جمع</button>
+      <button onclick="calculate('-')">➖ طرح</button>
+      <button onclick="calculate('*')">✖️ ضرب</button>
+      <button onclick="calculate('/')">➗ قسمة</button>
+    </div>
+
+    <div id="result">النتيجة ستظهر هنا</div>
+
+  </div>
+
+  <script>
+
+    function calculate(operation) {
+
+      let a = Number(document.getElementById("number1").value);
+      let b = Number(document.getElementById("number2").value);
+
+      let result;
+
+      if (operation === '+') {
+        result = a + b;
+      }
+
+      else if (operation === '-') {
+        result = a - b;
+      }
+
+      else if (operation === '*') {
+        result = a * b;
+      }
+
+      else if (operation === '/') {
+
+        if (b === 0) {
+          document.getElementById("result").innerText =
+            "لا يمكن القسمة على صفر";
+          return;
+        }
+
+        result = a / b;
+      }
+
+      document.getElementById("result").innerText =
+        "النتيجة: " + result;
+    }
+
+  </script>
+
+</body>
+</html>

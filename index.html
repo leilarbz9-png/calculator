@@ -62,7 +62,9 @@
       <button onclick="calculate('/')">➗ قسمة</button>
     </div>
 
-    <div id="result">النتيجة ستظهر هنا</div>
+<button onclick="clearCalculator()">🗑️ مسح</button>
+
+<div id="result">النتيجة ستظهر هنا</div>
 
   </div>
 
@@ -101,7 +103,11 @@
       document.getElementById("result").innerText =
         "النتيجة: " + result;
     }
-
+function clearCalculator() {
+    document.getElementById("number1").value = "";
+    document.getElementById("number2").value = "";
+    document.getElementById("result").innerText = "النتيجة ستظهر هنا";
+    }
   </script>
 
 </body>

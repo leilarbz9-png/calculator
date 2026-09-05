@@ -1,387 +1,376 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Leila Calculator</title>
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-<meta name="description" content="آلة حاسبة بسيطة وسريعة مع سجل العمليات والوضع الليلي.">
+<title>Calculator</title>
 
 <style>
 
 * {
     box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
 }
 
 body {
     margin: 0;
     min-height: 100vh;
+
     display: flex;
     justify-content: center;
     align-items: center;
+
     background: #ead8bb;
+
     font-family: Arial, sans-serif;
-    transition: 0.3s;
 }
 
 .calculator {
+
     width: 100%;
     max-width: 500px;
+
     min-height: 100vh;
+
     padding: 18px;
+
     background: #e5cba4;
+
     border: 3px solid #b89463;
+
     border-radius: 30px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    display: flex;
-    flex-direction: column;
 }
+
 
 .top {
+
+    height: 50px;
+
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
-    margin-bottom: 15px;
 }
 
-.top-title {
-    font-size: 20px;
-    font-weight: bold;
-    color: #4c2d18;
-}
 
-.top-buttons {
-    display: flex;
-    gap: 8px;
-}
+.history-btn {
 
-.top-btn {
     width: 45px;
     height: 45px;
+
     border: none;
+
     border-radius: 50%;
+
     background: #efd5aa;
+
     color: #4c2d18;
-    font-size: 22px;
+
+    font-size: 25px;
+
     cursor: pointer;
 }
 
-.top-btn:active {
-    transform: scale(0.9);
-}
 
 .display {
-    height: 155px;
-    background: #f8ecd8;
-    border: 2px solid #c39e6b;
-    border-radius: 25px;
-    padding: 20px;
+
+    height: 150px;
+
     margin-bottom: 15px;
+
+    padding: 20px;
+
+    background: #f8ecd8;
+
+    border: 2px solid #c39e6b;
+
+    border-radius: 25px;
+
     display: flex;
+
     flex-direction: column;
+
     justify-content: flex-end;
+
     overflow: hidden;
 }
 
+
 .expression {
+
     min-height: 30px;
+
     text-align: right;
+
     font-size: 22px;
+
     color: #80654b;
+
     word-break: break-all;
 }
+
 
 .result {
+
     text-align: right;
+
     font-size: 42px;
+
     font-weight: bold;
+
     color: #4c2d18;
+
     word-break: break-all;
 }
 
-.copy-message {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #4c2d18;
-    color: white;
-    padding: 10px 18px;
-    border-radius: 20px;
-    display: none;
-    z-index: 1000;
-}
 
 .buttons {
-    flex: 1;
+
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+
+    grid-template-columns:
+    repeat(4, 1fr);
+
     gap: 12px;
 }
 
+
 .btn {
+
     min-height: 70px;
+
     border: none;
+
     border-radius: 22px;
+
     background: #efd5aa;
+
     color: #4c2d18;
+
     font-size: 26px;
+
     font-weight: bold;
+
     cursor: pointer;
-    box-shadow: 0 4px 0 #c39e6b;
-    transition: 0.1s;
 }
+
 
 .btn:active {
-    transform: translateY(4px);
-    box-shadow: 0 0 0 #c39e6b;
+
+    transform: scale(0.95);
 }
+
 
 .operator {
+
     background: #aa794d;
+
     color: white;
 }
+
 
 .clear {
+
     background: #c18b63;
+
     color: white;
 }
+
 
 .backspace {
+
     background: #9b7655;
+
     color: white;
 }
 
+
 .equal {
+
     background: #754c2e;
+
     color: white;
+
     grid-column: span 3;
+
     min-height: 75px;
 }
 
+
 .zero {
+
     grid-column: span 2;
 }
 
+
 .history-panel {
+
     position: fixed;
+
     top: 0;
+
     right: -100%;
+
     width: min(400px, 90%);
+
     height: 100vh;
+
     background: #f8ecd8;
+
     z-index: 999;
+
     padding: 20px;
-    box-shadow: -5px 0 20px rgba(0,0,0,0.2);
+
+    box-shadow:
+    -5px 0 20px rgba(0,0,0,0.2);
+
     transition: right 0.3s ease;
+
     overflow-y: auto;
 }
 
+
 .history-panel.open {
+
     right: 0;
 }
 
+
 .history-header {
+
     display: flex;
+
     justify-content: space-between;
+
     align-items: center;
+
     color: #4c2d18;
 }
 
-.history-header h2 {
-    margin: 0;
-}
 
 .close-history {
+
     width: 40px;
     height: 40px;
+
     border: none;
+
     border-radius: 50%;
+
     background: #aa794d;
+
     color: white;
+
     font-size: 25px;
+
     cursor: pointer;
 }
 
+
 .history-item {
+
     background: #efd5aa;
+
     border-radius: 15px;
+
     padding: 15px;
+
     margin: 10px 0;
 }
 
+
 .history-expression {
+
     color: #80654b;
+
     font-size: 18px;
 }
 
+
 .history-result {
+
     color: #4c2d18;
+
     font-size: 24px;
+
     font-weight: bold;
+
     margin-top: 5px;
 }
 
+
 .clear-history {
+
     width: 100%;
+
     padding: 14px;
+
     border: none;
+
     border-radius: 15px;
+
     background: #754c2e;
+
     color: white;
+
     font-size: 18px;
+
     cursor: pointer;
-    margin-top: 10px;
 }
 
-/* الوضع الليلي */
-
-body.dark {
-    background: #171717;
-}
-
-body.dark .calculator {
-    background: #292929;
-    border-color: #444;
-}
-
-body.dark .top-title {
-    color: #f5f5f5;
-}
-
-body.dark .top-btn {
-    background: #3b3b3b;
-    color: white;
-}
-
-body.dark .display {
-    background: #1f1f1f;
-    border-color: #444;
-}
-
-body.dark .expression {
-    color: #aaa;
-}
-
-body.dark .result {
-    color: white;
-}
-
-body.dark .btn {
-    background: #3b3b3b;
-    color: white;
-    box-shadow: 0 4px 0 #222;
-}
-
-body.dark .operator {
-    background: #8c623f;
-}
-
-body.dark .clear {
-    background: #9b6847;
-}
-
-body.dark .backspace {
-    background: #70543e;
-}
-
-body.dark .equal {
-    background: #68442b;
-}
-
-body.dark .history-panel {
-    background: #202020;
-    color: white;
-}
-
-body.dark .history-header {
-    color: white;
-}
-
-body.dark .history-item {
-    background: #333;
-}
-
-body.dark .history-expression {
-    color: #aaa;
-}
-
-body.dark .history-result {
-    color: white;
-}
-
-
-/* الهاتف */
 
 @media (max-width: 500px) {
 
-    body {
-        align-items: stretch;
-    }
-
     .calculator {
-        min-height: 100vh;
+
         border-radius: 0;
+
         border-left: none;
+
         border-right: none;
+
         padding: 12px;
     }
 
-    .display {
-        height: 145px;
-    }
-
     .btn {
+
         min-height: 65px;
+
         font-size: 24px;
-        border-radius: 18px;
+
     }
 
     .result {
+
         font-size: 36px;
     }
 
 }
 
 </style>
+
 </head>
+
 
 <body>
 
+
 <div class="calculator">
+
 
     <div class="top">
 
-        <div class="top-title">
-            🧮 Calculator
-        </div>
+        <button
+        class="history-btn"
+        id="historyButton"
+        type="button">
 
-        <div class="top-buttons">
+        ↶
 
-            <button
-                class="top-btn"
-                onclick="openHistory()"
-                type="button">
-                ↶
-            </button>
-
-            <button
-                class="top-btn"
-                onclick="toggleDarkMode()"
-                type="button">
-                🌙
-            </button>
-
-            <button
-                class="top-btn"
-                onclick="copyResult()"
-                type="button">
-                📋
-            </button>
-
-        </div>
+        </button>
 
     </div>
 
@@ -389,14 +378,16 @@ body.dark .history-result {
     <div class="display">
 
         <div
-            class="expression"
-            id="expression">
+        class="expression"
+        id="expression">
         </div>
 
         <div
-            class="result"
-            id="result">
-            0
+        class="result"
+        id="result">
+
+        0
+
         </div>
 
     </div>
@@ -404,703 +395,797 @@ body.dark .history-result {
 
     <div class="buttons">
 
-        <button
-            class="btn clear"
-            onclick="clearAll()"
-            type="button">
-            C
-        </button>
 
         <button
-            class="btn"
-            onclick="addValue('(')"
-            type="button">
-            (
-        </button>
+        class="btn clear"
+        type="button"
+        data-value="C">
 
-        <button
-            class="btn"
-            onclick="addValue(')')"
-            type="button">
-            )
-        </button>
+        C
 
-        <button
-            class="btn operator"
-            onclick="addValue('%')"
-            type="button">
-            %
         </button>
 
 
         <button
-            class="btn"
-            onclick="addValue('7')"
-            type="button">
-            7
-        </button>
+        class="btn"
+        type="button"
+        data-value="(">
 
-        <button
-            class="btn"
-            onclick="addValue('8')"
-            type="button">
-            8
-        </button>
+        (
 
-        <button
-            class="btn"
-            onclick="addValue('9')"
-            type="button">
-            9
-        </button>
-
-        <button
-            class="btn operator"
-            onclick="addValue('÷')"
-            type="button">
-            ÷
         </button>
 
 
         <button
-            class="btn"
-            onclick="addValue('4')"
-            type="button">
-            4
-        </button>
+        class="btn"
+        type="button"
+        data-value=")">
 
-        <button
-            class="btn"
-            onclick="addValue('5')"
-            type="button">
-            5
-        </button>
+        )
 
-        <button
-            class="btn"
-            onclick="addValue('6')"
-            type="button">
-            6
-        </button>
-
-        <button
-            class="btn operator"
-            onclick="addValue('×')"
-            type="button">
-            ×
         </button>
 
 
         <button
-            class="btn"
-            onclick="addValue('1')"
-            type="button">
-            1
-        </button>
+        class="btn operator"
+        type="button"
+        data-value="%">
 
-        <button
-            class="btn"
-            onclick="addValue('2')"
-            type="button">
-            2
-        </button>
+        %
 
-        <button
-            class="btn"
-            onclick="addValue('3')"
-            type="button">
-            3
-        </button>
-
-        <button
-            class="btn operator"
-            onclick="addValue('-')"
-            type="button">
-            −
         </button>
 
 
         <button
-            class="btn zero"
-            onclick="addValue('0')"
-            type="button">
-            0
-        </button>
+        class="btn"
+        type="button"
+        data-value="7">
 
-        <button
-            class="btn"
-            onclick="addValue(',')"
-            type="button">
-            ,
-        </button>
+        7
 
-        <button
-            class="btn operator"
-            onclick="addValue('+')"
-            type="button">
-            +
         </button>
 
 
         <button
-            class="btn backspace"
-            onclick="backspace()"
-            type="button">
-            ⌫
+        class="btn"
+        type="button"
+        data-value="8">
+
+        8
+
         </button>
 
+
         <button
-            class="btn equal"
-            onclick="calculate()"
-            type="button">
-            =
+        class="btn"
+        type="button"
+        data-value="9">
+
+        9
+
         </button>
+
+
+        <button
+        class="btn operator"
+        type="button"
+        data-value="÷">
+
+        ÷
+
+        </button>
+
+
+        <button
+        class="btn"
+        type="button"
+        data-value="4">
+
+        4
+
+        </button>
+
+
+        <button
+        class="btn"
+        type="button"
+        data-value="5">
+
+        5
+
+        </button>
+
+
+        <button
+        class="btn"
+        type="button"
+        data-value="6">
+
+        6
+
+        </button>
+
+
+        <button
+        class="btn operator"
+        type="button"
+        data-value="×">
+
+        ×
+
+        </button>
+
+
+        <button
+        class="btn"
+        type="button"
+        data-value="1">
+
+        1
+
+        </button>
+
+
+        <button
+        class="btn"
+        type="button"
+        data-value="2">
+
+        2
+
+        </button>
+
+
+        <button
+        class="btn"
+        type="button"
+        data-value="3">
+
+        3
+
+        </button>
+
+
+        <button
+        class="btn operator"
+        type="button"
+        data-value="-">
+
+        −
+
+        </button>
+
+
+        <button
+        class="btn zero"
+        type="button"
+        data-value="0">
+
+        0
+
+        </button>
+
+
+        <button
+        class="btn"
+        type="button"
+        data-value=",">
+
+        ,
+
+        </button>
+
+
+        <button
+        class="btn operator"
+        type="button"
+        data-value="+">
+
+        +
+
+        </button>
+
+
+        <button
+        class="btn backspace"
+        id="backspaceButton"
+        type="button">
+
+        ⌫
+
+        </button>
+
+
+        <button
+        class="btn equal"
+        id="equalButton"
+        type="button">
+
+        =
+
+        </button>
+
 
     </div>
 
 </div>
 
 
+
 <div
-    class="history-panel"
-    id="historyPanel">
+class="history-panel"
+id="historyPanel">
+
 
     <div class="history-header">
 
         <h2>
-            سجل العمليات
+        سجل العمليات
         </h2>
 
         <button
-            class="close-history"
-            onclick="closeHistory()"
-            type="button">
-            ×
+        class="close-history"
+        id="closeHistory"
+        type="button">
+
+        ×
+
         </button>
 
     </div>
 
+
     <div id="historyList"></div>
 
+
     <button
-        class="clear-history"
-        onclick="clearHistory()"
-        type="button">
-        مسح السجل
+    class="clear-history"
+    id="clearHistory"
+    type="button">
+
+    مسح السجل
+
     </button>
 
+
 </div>
 
-
-<div
-    class="copy-message"
-    id="copyMessage">
-    تم نسخ النتيجة ✓
-</div>
 
 
 <script>
 
+
 let currentExpression = "";
+
 
 let history = [];
 
+
 try {
+
     history =
-        JSON.parse(
-            localStorage.getItem("calculatorHistory")
-        ) || [];
-} catch {
+    JSON.parse(
+    localStorage.getItem(
+    "calculatorHistory"
+    )
+    ) || [];
+
+}
+catch {
+
     history = [];
+
 }
 
 
-const expressionElement =
-    document.getElementById("expression");
 
-const resultElement =
-    document.getElementById("result");
+const expression =
+document.getElementById(
+"expression"
+);
+
+
+const result =
+document.getElementById(
+"result"
+);
+
 
 
 function addValue(value) {
 
+
     if (
-        resultElement.innerText !== "0" &&
-        resultElement.innerText !== "" &&
-        currentExpression === ""
+    result.innerText !== "0" &&
+    result.innerText !== "" &&
+    currentExpression === ""
     ) {
+
         currentExpression =
-            resultElement.innerText.toString();
+        result.innerText;
+
     }
 
+
     if (value === ",") {
+
         value = ".";
+
     }
+
 
     currentExpression += value;
 
-    expressionElement.innerText =
-        currentExpression.replace(/\./g, ",");
 
-    resultElement.innerText = "";
+    expression.innerText =
+    currentExpression.replace(
+    /\./g,
+    ","
+    );
+
+
+    result.innerText = "";
+
 }
+
 
 
 function backspace() {
 
-    if (currentExpression.length > 0) {
 
-        currentExpression =
-            currentExpression.slice(0, -1);
+    currentExpression =
+    currentExpression.slice(
+    0,
+    -1
+    );
+
+
+    expression.innerText =
+    currentExpression.replace(
+    /\./g,
+    ","
+    );
+
+
+    if (
+    currentExpression === ""
+    ) {
+
+        result.innerText = "0";
 
     }
 
-    expressionElement.innerText =
-        currentExpression.replace(/\./g, ",");
-
-    if (currentExpression === "") {
-        resultElement.innerText = "0";
-    }
 }
+
 
 
 function clearAll() {
 
+
     currentExpression = "";
 
-    expressionElement.innerText = "";
 
-    resultElement.innerText = "0";
+    expression.innerText = "";
+
+
+    result.innerText = "0";
+
 }
+
 
 
 function calculate() {
 
-    if (currentExpression === "") {
+
+    if (
+    currentExpression === ""
+    ) {
+
         return;
+
     }
+
 
     try {
 
-        let expression =
-            currentExpression;
 
-        expression =
-            expression.replace(
-                /(\d+(\.\d+)?)%/g,
-                "($1/100)"
-            );
+        let exp =
+        currentExpression;
 
-        expression =
-            expression
-                .replace(/×/g, "*")
-                .replace(/÷/g, "/");
+
+        exp =
+        exp.replace(
+        /(\d+(\.\d+)?)%/g,
+        "($1/100)"
+        );
+
+
+        exp =
+        exp.replace(
+        /×/g,
+        "*"
+        );
+
+
+        exp =
+        exp.replace(
+        /÷/g,
+        "/"
+        );
+
 
         if (
-            !/^[0-9+\-*/().\s]+$/.test(expression)
+        !/^[0-9+\-*/().\s]+$/.test(exp)
         ) {
+
             throw new Error();
+
         }
+
 
         let answer =
-            Function(
-                '"use strict"; return (' +
-                expression +
-                ')'
-            )();
+        Function(
+        '"use strict"; return (' +
+        exp +
+        ')'
+        )();
+
 
         if (
-            typeof answer !== "number" ||
-            !isFinite(answer)
+        typeof answer !== "number" ||
+        !isFinite(answer)
         ) {
+
             throw new Error();
+
         }
 
+
         answer =
-            Number(
-                parseFloat(
-                    answer.toFixed(10)
-                )
-            );
+        Number(
+        parseFloat(
+        answer.toFixed(10)
+        )
+        );
 
 
         history.unshift({
 
             expression:
-                currentExpression,
+            currentExpression,
 
             result:
-                answer
+            answer
 
         });
 
 
         history =
-            history.slice(0, 30);
+        history.slice(0, 30);
 
 
         localStorage.setItem(
-            "calculatorHistory",
-            JSON.stringify(history)
+        "calculatorHistory",
+        JSON.stringify(history)
         );
 
 
-        expressionElement.innerText =
-            currentExpression.replace(
-                /\./g,
-                ","
-            );
+        expression.innerText =
+        currentExpression.replace(
+        /\./g,
+        ","
+        );
 
-        resultElement.innerText =
-            formatNumber(answer);
+
+        result.innerText =
+        answer;
+
 
         currentExpression = "";
 
 
-    } catch {
+    }
 
-        resultElement.innerText =
-            "خطأ";
+    catch {
+
+        result.innerText =
+        "خطأ";
 
     }
 
 }
 
-
-function formatNumber(number) {
-
-    if (
-        typeof number !== "number"
-    ) {
-        return number;
-    }
-
-    return number.toLocaleString(
-        "en-US",
-        {
-            maximumFractionDigits: 10
-        }
-    );
-
-}
 
 
 function openHistory() {
 
+
     document
-        .getElementById("historyPanel")
-        .classList.add("open");
+    .getElementById(
+    "historyPanel"
+    )
+    .classList.add(
+    "open"
+    );
+
 
     showHistory();
 
 }
 
 
+
 function closeHistory() {
 
+
     document
-        .getElementById("historyPanel")
-        .classList.remove("open");
+    .getElementById(
+    "historyPanel"
+    )
+    .classList.remove(
+    "open"
+    );
 
 }
 
 
+
 function showHistory() {
 
-    const historyList =
-        document.getElementById(
-            "historyList"
-        );
 
-    historyList.innerHTML = "";
+    const list =
+    document.getElementById(
+    "historyList"
+    );
 
 
-    if (history.length === 0) {
+    list.innerHTML = "";
 
-        historyList.innerHTML =
-            '<div class="empty-history">لا توجد عمليات بعد</div>';
+
+    if (
+    history.length === 0
+    ) {
+
+        list.innerHTML =
+        '<div>لا توجد عمليات بعد</div>';
 
         return;
 
     }
 
 
-    history.forEach(function(item) {
-
-        const historyItem =
-            document.createElement("div");
-
-        historyItem.className =
-            "history-item";
+    history.forEach(
+    function(item) {
 
 
-        const expression =
-            document.createElement("div");
-
-        expression.className =
-            "history-expression";
-
-        expression.innerText =
-            item.expression.replace(
-                /\./g,
-                ","
-            );
+        const div =
+        document.createElement(
+        "div"
+        );
 
 
-        const result =
-            document.createElement("div");
-
-        result.className =
-            "history-result";
-
-        result.innerText =
-            "= " + item.result;
+        div.className =
+        "history-item";
 
 
-        historyItem.appendChild(expression);
+        div.innerHTML =
 
-        historyItem.appendChild(result);
+        '<div class="history-expression">' +
 
-        historyList.appendChild(historyItem);
+        item.expression.replace(
+        /\./g,
+        ","
+        ) +
+
+        '</div>' +
+
+        '<div class="history-result">' +
+
+        '= ' +
+        item.result +
+
+        '</div>';
+
+
+        list.appendChild(div);
 
     });
 
 }
 
 
+
 function clearHistory() {
+
 
     history = [];
 
+
     localStorage.removeItem(
-        "calculatorHistory"
+    "calculatorHistory"
     );
+
 
     showHistory();
 
 }
 
 
-function toggleDarkMode() {
 
-    document.body.classList.toggle("dark");
+document
+.querySelectorAll(
+".btn"
+)
+.forEach(
+function(button) {
 
-    const isDark =
-        document.body.classList.contains(
-            "dark"
-        );
 
-    localStorage.setItem(
-        "calculatorDarkMode",
-        isDark ? "on" : "off"
-    );
+    button.addEventListener(
+    "click",
+    function() {
 
-}
 
+        const value =
+        button.dataset.value;
 
-function loadDarkMode() {
 
-    const mode =
-        localStorage.getItem(
-            "calculatorDarkMode"
-        );
-
-    if (mode === "on") {
-
-        document.body.classList.add(
-            "dark"
-        );
-
-    }
-
-}
-
-
-function copyResult() {
-
-    const result =
-        resultElement.innerText;
-
-    if (
-        !result ||
-        result === "0" ||
-        result === "خطأ"
-    ) {
-        return;
-    }
-
-
-    if (
-        navigator.clipboard &&
-        navigator.clipboard.writeText
-    ) {
-
-        navigator.clipboard
-            .writeText(result)
-            .then(function() {
-
-                showCopyMessage();
-
-            })
-            .catch(function() {
-
-                fallbackCopy(result);
-
-            });
-
-    } else {
-
-        fallbackCopy(result);
-
-    }
-
-}
-
-
-function fallbackCopy(text) {
-
-    const textarea =
-        document.createElement("textarea");
-
-    textarea.value = text;
-
-    document.body.appendChild(
-        textarea
-    );
-
-    textarea.select();
-
-    try {
-
-        document.execCommand("copy");
-
-        showCopyMessage();
-
-    } catch {
-
-    }
-
-    document.body.removeChild(
-        textarea
-    );
-
-}
-
-
-function showCopyMessage() {
-
-    const message =
-        document.getElementById(
-            "copyMessage"
-        );
-
-    message.style.display =
-        "block";
-
-
-    setTimeout(function() {
-
-        message.style.display =
-            "none";
-
-    }, 1500);
-
-}
-
-
-document.addEventListener(
-    "keydown",
-    function(event) {
-
-        const key =
-            event.key;
-
-
-        if (
-            key >= "0" &&
-            key <= "9"
-        ) {
-
-            addValue(key);
-
-        }
-
-
-        else if (
-            key === "+" ||
-            key === "-" ||
-            key === "*" ||
-            key === "/" ||
-            key === "%" ||
-            key === "(" ||
-            key === ")"
-        ) {
-
-            if (key === "*") {
-
-                addValue("×");
-
-            }
-
-            else if (key === "/") {
-
-                addValue("÷");
-
-            }
-
-            else {
-
-                addValue(key);
-
-            }
-
-        }
-
-
-        else if (
-            key === "." ||
-            key === ","
-        ) {
-
-            addValue(",");
-
-        }
-
-
-        else if (
-            key === "Enter" ||
-            key === "="
-        ) {
-
-            calculate();
-
-        }
-
-
-        else if (
-            key === "Backspace"
-        ) {
-
-            backspace();
-
-        }
-
-
-        else if (
-            key === "Escape"
-        ) {
+        if (value === "C") {
 
             clearAll();
 
+            return;
+
         }
 
-    }
+
+        if (button.id === "backspaceButton") {
+
+            backspace();
+
+            return;
+
+        }
+
+
+        if (button.id === "equalButton") {
+
+            calculate();
+
+            return;
+
+        }
+
+
+        addValue(value);
+
+    });
+
+});
+
+
+
+document
+.getElementById(
+"historyButton"
+)
+.addEventListener(
+"click",
+openHistory
 );
 
 
-loadDarkMode();
+
+document
+.getElementById(
+"closeHistory"
+)
+.addEventListener(
+"click",
+closeHistory
+);
+
+
+
+document
+.getElementById(
+"clearHistory"
+)
+.addEventListener(
+"click",
+clearHistory
+);
+
+
+
+document.addEventListener(
+"keydown",
+function(event) {
+
+
+    const key =
+    event.key;
+
+
+    if (
+    key >= "0" &&
+    key <= "9"
+    ) {
+
+        addValue(key);
+
+    }
+
+
+    else if (
+    key === "+" ||
+    key === "-" ||
+    key === "%" ||
+    key === "(" ||
+    key === ")"
+    ) {
+
+        addValue(key);
+
+    }
+
+
+    else if (key === "*") {
+
+        addValue("×");
+
+    }
+
+
+    else if (key === "/") {
+
+        addValue("÷");
+
+    }
+
+
+    else if (
+    key === "." ||
+    key === ","
+    ) {
+
+        addValue(",");
+
+    }
+
+
+    else if (
+    key === "Enter" ||
+    key === "="
+    ) {
+
+        calculate();
+
+    }
+
+
+    else if (
+    key === "Backspace"
+    ) {
+
+        backspace();
+
+    }
+
+
+    else if (
+    key === "Escape"
+    ) {
+
+        clearAll();
+
+    }
+
+});
+
 
 </script>
 
+
 </body>
-      </html>
+
+    </html>

@@ -1113,6 +1113,7 @@ id="historyPanel">
 
 let currentExpression = "";
 
+
 let history = [];
 
 
@@ -1159,23 +1160,6 @@ document.getElementById(
 
 
 
-/* العمليات الحسابية */
-
-function isOperator(value) {
-
-    return (
-        value === "+" ||
-        value === "-" ||
-        value === "×" ||
-        value === "÷"
-    );
-
-}
-
-
-
-/* إضافة قيمة */
-
 function addValue(value) {
 
 
@@ -1198,36 +1182,6 @@ function addValue(value) {
     if (value === ",") {
 
         value = ".";
-
-    }
-
-
-    /*
-    منع عمليتين حسابيتين متتاليتين
-    */
-
-    if (
-        isOperator(value) &&
-        currentExpression !== ""
-    ) {
-
-        const lastChar =
-        currentExpression[
-            currentExpression.length - 1
-        ];
-
-
-        if (
-            isOperator(lastChar)
-        ) {
-
-            currentExpression =
-            currentExpression.slice(
-                0,
-                -1
-            );
-
-        }
 
     }
 
@@ -1506,7 +1460,7 @@ function showHistory() {
             "</div>";
 
 
-            /* الضغط على عملية قديمة */
+            /* إضافة العملية عند الضغط عليها */
 
             div.addEventListener(
                 "click",
@@ -1634,8 +1588,6 @@ async function copyResult() {
 }
 
 
-
-/* أزرار الآلة */
 
 document
 .querySelectorAll(
@@ -1834,4 +1786,66 @@ document.addEventListener(
         }
 
 
-        else i
+        else if (
+            key === "*"
+        ) {
+
+            addValue("×");
+
+        }
+
+
+        else if (
+            key === "/"
+        ) {
+
+            addValue("÷");
+
+        }
+
+
+        else if (
+            key === "." ||
+            key === ","
+        ) {
+
+            addValue(",");
+
+        }
+
+
+        else if (
+            key === "Enter" ||
+            key === "="
+        ) {
+
+            calculate();
+
+        }
+
+
+        else if (
+            key === "Backspace"
+        ) {
+
+            backspace();
+
+        }
+
+
+        else if (
+            key === "Escape"
+        ) {
+
+            clearAll();
+
+        }
+
+    }
+);
+
+
+</script>
+
+
+<

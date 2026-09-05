@@ -8,12 +8,16 @@
 <meta name="viewport"
 content="width=device-width, initial-scale=1.0">
 
-<title>Calculator</title>
+<title>Leila Calculator</title>
+
+<meta name="description"
+content="آلة حاسبة بسيطة وسريعة مع سجل العمليات والوضع الليلي.">
 
 <style>
 
 * {
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -27,6 +31,8 @@ body {
     background: #ead8bb;
 
     font-family: Arial, sans-serif;
+
+    transition: background 0.3s;
 }
 
 .calculator {
@@ -43,6 +49,8 @@ body {
     border: 3px solid #b89463;
 
     border-radius: 30px;
+
+    transition: 0.3s;
 }
 
 
@@ -51,11 +59,22 @@ body {
     height: 50px;
 
     display: flex;
-    justify-content: flex-start;
+
+    justify-content: space-between;
+
     align-items: center;
 }
 
 
+.top-buttons {
+
+    display: flex;
+
+    gap: 8px;
+}
+
+
+.top-btn,
 .history-btn {
 
     width: 45px;
@@ -69,9 +88,16 @@ body {
 
     color: #4c2d18;
 
-    font-size: 25px;
+    font-size: 22px;
 
     cursor: pointer;
+}
+
+
+.top-btn:active,
+.history-btn:active {
+
+    transform: scale(0.9);
 }
 
 
@@ -96,6 +122,8 @@ body {
     justify-content: flex-end;
 
     overflow: hidden;
+
+    transition: 0.3s;
 }
 
 
@@ -155,12 +183,19 @@ body {
     font-weight: bold;
 
     cursor: pointer;
+
+    box-shadow:
+    0 4px 0 #c39e6b;
+
+    transition: 0.1s;
 }
 
 
 .btn:active {
 
-    transform: scale(0.95);
+    transform: translateY(4px);
+
+    box-shadow: none;
 }
 
 
@@ -322,9 +357,123 @@ body {
 }
 
 
+/* الوضع الليلي */
+
+body.dark {
+
+    background: #171717;
+}
+
+
+body.dark .calculator {
+
+    background: #292929;
+
+    border-color: #444;
+}
+
+
+body.dark .display {
+
+    background: #1f1f1f;
+
+    border-color: #444;
+}
+
+
+body.dark .expression {
+
+    color: #aaa;
+}
+
+
+body.dark .result {
+
+    color: white;
+}
+
+
+body.dark .btn {
+
+    background: #3b3b3b;
+
+    color: white;
+
+    box-shadow:
+    0 4px 0 #222;
+}
+
+
+body.dark .operator {
+
+    background: #8c623f;
+
+    color: white;
+}
+
+
+body.dark .clear {
+
+    background: #9b6847;
+}
+
+
+body.dark .backspace {
+
+    background: #70543e;
+}
+
+
+body.dark .equal {
+
+    background: #68442b;
+}
+
+
+body.dark .top-btn,
+body.dark .history-btn {
+
+    background: #3b3b3b;
+
+    color: white;
+}
+
+
+body.dark .history-panel {
+
+    background: #202020;
+}
+
+
+body.dark .history-header {
+
+    color: white;
+}
+
+
+body.dark .history-item {
+
+    background: #333;
+}
+
+
+body.dark .history-expression {
+
+    color: #aaa;
+}
+
+
+body.dark .history-result {
+
+    color: white;
+}
+
+
 @media (max-width: 500px) {
 
     .calculator {
+
+        min-height: 100vh;
 
         border-radius: 0;
 
@@ -335,13 +484,14 @@ body {
         padding: 12px;
     }
 
+
     .btn {
 
         min-height: 65px;
 
         font-size: 24px;
-
     }
+
 
     .result {
 
@@ -363,6 +513,7 @@ body {
 
     <div class="top">
 
+
         <button
         class="history-btn"
         id="historyButton"
@@ -372,15 +523,34 @@ body {
 
         </button>
 
+
+        <div class="top-buttons">
+
+
+            <button
+            class="top-btn"
+            id="darkButton"
+            type="button">
+
+            🌙
+
+            </button>
+
+
+        </div>
+
+
     </div>
 
 
     <div class="display">
 
+
         <div
         class="expression"
         id="expression">
         </div>
+
 
         <div
         class="result"
@@ -389,6 +559,7 @@ body {
         0
 
         </div>
+
 
     </div>
 
@@ -619,9 +790,11 @@ id="historyPanel">
 
     <div class="history-header">
 
+
         <h2>
         سجل العمليات
         </h2>
+
 
         <button
         class="close-history"
@@ -631,6 +804,7 @@ id="historyPanel">
         ×
 
         </button>
+
 
     </div>
 
@@ -665,12 +839,13 @@ try {
 
     history =
     JSON.parse(
-    localStorage.getItem(
-    "calculatorHistory"
-    )
+        localStorage.getItem(
+            "calculatorHistory"
+        )
     ) || [];
 
 }
+
 catch {
 
     history = [];
@@ -681,13 +856,13 @@ catch {
 
 const expression =
 document.getElementById(
-"expression"
+    "expression"
 );
 
 
 const result =
 document.getElementById(
-"result"
+    "result"
 );
 
 
@@ -696,9 +871,13 @@ function addValue(value) {
 
 
     if (
-    result.innerText !== "0" &&
-    result.innerText !== "" &&
-    currentExpression === ""
+
+        result.innerText !== "0" &&
+
+        result.innerText !== "" &&
+
+        currentExpression === ""
+
     ) {
 
         currentExpression =
@@ -719,8 +898,8 @@ function addValue(value) {
 
     expression.innerText =
     currentExpression.replace(
-    /\./g,
-    ","
+        /\./g,
+        ","
     );
 
 
@@ -735,20 +914,20 @@ function backspace() {
 
     currentExpression =
     currentExpression.slice(
-    0,
-    -1
+        0,
+        -1
     );
 
 
     expression.innerText =
     currentExpression.replace(
-    /\./g,
-    ","
+        /\./g,
+        ","
     );
 
 
     if (
-    currentExpression === ""
+        currentExpression === ""
     ) {
 
         result.innerText = "0";
@@ -778,7 +957,7 @@ function calculate() {
 
 
     if (
-    currentExpression === ""
+        currentExpression === ""
     ) {
 
         return;
@@ -795,27 +974,27 @@ function calculate() {
 
         exp =
         exp.replace(
-        /(\d+(\.\d+)?)%/g,
-        "($1/100)"
+            /(\d+(\.\d+)?)%/g,
+            "($1/100)"
         );
 
 
         exp =
         exp.replace(
-        /×/g,
-        "*"
+            /×/g,
+            "*"
         );
 
 
         exp =
         exp.replace(
-        /÷/g,
-        "/"
+            /÷/g,
+            "/"
         );
 
 
         if (
-        !/^[0-9+\-*/().\s]+$/.test(exp)
+            !/^[0-9+\-*/().\s]+$/.test(exp)
         ) {
 
             throw new Error();
@@ -825,15 +1004,15 @@ function calculate() {
 
         let answer =
         Function(
-        '"use strict"; return (' +
-        exp +
-        ')'
+            '"use strict"; return (' +
+            exp +
+            ')'
         )();
 
 
         if (
-        typeof answer !== "number" ||
-        !isFinite(answer)
+            typeof answer !== "number" ||
+            !isFinite(answer)
         ) {
 
             throw new Error();
@@ -843,9 +1022,9 @@ function calculate() {
 
         answer =
         Number(
-        parseFloat(
-        answer.toFixed(10)
-        )
+            parseFloat(
+                answer.toFixed(10)
+            )
         );
 
 
@@ -865,15 +1044,15 @@ function calculate() {
 
 
         localStorage.setItem(
-        "calculatorHistory",
-        JSON.stringify(history)
+            "calculatorHistory",
+            JSON.stringify(history)
         );
 
 
         expression.innerText =
         currentExpression.replace(
-        /\./g,
-        ","
+            /\./g,
+            ","
         );
 
 
@@ -902,10 +1081,10 @@ function openHistory() {
 
     document
     .getElementById(
-    "historyPanel"
+        "historyPanel"
     )
     .classList.add(
-    "open"
+        "open"
     );
 
 
@@ -920,10 +1099,10 @@ function closeHistory() {
 
     document
     .getElementById(
-    "historyPanel"
+        "historyPanel"
     )
     .classList.remove(
-    "open"
+        "open"
     );
 
 }
@@ -935,7 +1114,7 @@ function showHistory() {
 
     const list =
     document.getElementById(
-    "historyList"
+        "historyList"
     );
 
 
@@ -943,11 +1122,11 @@ function showHistory() {
 
 
     if (
-    history.length === 0
+        history.length === 0
     ) {
 
         list.innerHTML =
-        '<div>لا توجد عمليات بعد</div>';
+        "<div>لا توجد عمليات بعد</div>";
 
         return;
 
@@ -955,41 +1134,43 @@ function showHistory() {
 
 
     history.forEach(
-    function(item) {
+        function(item) {
 
 
-        const div =
-        document.createElement(
-        "div"
-        );
+            const div =
+            document.createElement(
+                "div"
+            );
 
 
-        div.className =
-        "history-item";
+            div.className =
+            "history-item";
 
 
-        div.innerHTML =
+            div.innerHTML =
 
-        '<div class="history-expression">' +
+            '<div class="history-expression">' +
 
-        item.expression.replace(
-        /\./g,
-        ","
-        ) +
+            item.expression.replace(
+                /\./g,
+                ","
+            ) +
 
-        '</div>' +
+            "</div>" +
 
-        '<div class="history-result">' +
+            '<div class="history-result">' +
 
-        '= ' +
-        item.result +
+            "= " +
 
-        '</div>';
+            item.result +
+
+            "</div>";
 
 
-        list.appendChild(div);
+            list.appendChild(div);
 
-    });
+        }
+    );
 
 }
 
@@ -1002,7 +1183,7 @@ function clearHistory() {
 
 
     localStorage.removeItem(
-    "calculatorHistory"
+        "calculatorHistory"
     );
 
 
@@ -1014,173 +1195,243 @@ function clearHistory() {
 
 document
 .querySelectorAll(
-".btn"
+    ".btn"
 )
 .forEach(
-function(button) {
+    function(button) {
 
 
-    button.addEventListener(
+        button.addEventListener(
+            "click",
+            function() {
+
+
+                const value =
+                button.dataset.value;
+
+
+                if (
+                    value === "C"
+                ) {
+
+                    clearAll();
+
+                    return;
+
+                }
+
+
+                if (
+                    button.id ===
+                    "backspaceButton"
+                ) {
+
+                    backspace();
+
+                    return;
+
+                }
+
+
+                if (
+                    button.id ===
+                    "equalButton"
+                ) {
+
+                    calculate();
+
+                    return;
+
+                }
+
+
+                addValue(value);
+
+            }
+        );
+
+    }
+);
+
+
+
+document
+.getElementById(
+    "historyButton"
+)
+.addEventListener(
+    "click",
+    openHistory
+);
+
+
+
+document
+.getElementById(
+    "closeHistory"
+)
+.addEventListener(
+    "click",
+    closeHistory
+);
+
+
+
+document
+.getElementById(
+    "clearHistory"
+)
+.addEventListener(
+    "click",
+    clearHistory
+);
+
+
+
+document
+.getElementById(
+    "darkButton"
+)
+.addEventListener(
     "click",
     function() {
 
 
-        const value =
-        button.dataset.value;
+        document.body.classList.toggle(
+            "dark"
+        );
 
 
-        if (value === "C") {
+        if (
+            document.body.classList.contains(
+                "dark"
+            )
+        ) {
 
-            clearAll();
-
-            return;
-
-        }
-
-
-        if (button.id === "backspaceButton") {
-
-            backspace();
-
-            return;
+            localStorage.setItem(
+                "calculatorDarkMode",
+                "on"
+            );
 
         }
 
+        else {
 
-        if (button.id === "equalButton") {
-
-            calculate();
-
-            return;
+            localStorage.setItem(
+                "calculatorDarkMode",
+                "off"
+            );
 
         }
 
-
-        addValue(value);
-
-    });
-
-});
-
-
-
-document
-.getElementById(
-"historyButton"
-)
-.addEventListener(
-"click",
-openHistory
+    }
 );
 
 
 
-document
-.getElementById(
-"closeHistory"
-)
-.addEventListener(
-"click",
-closeHistory
-);
+if (
+    localStorage.getItem(
+        "calculatorDarkMode"
+    ) === "on"
+) {
 
+    document.body.classList.add(
+        "dark"
+    );
 
-
-document
-.getElementById(
-"clearHistory"
-)
-.addEventListener(
-"click",
-clearHistory
-);
+}
 
 
 
 document.addEventListener(
-"keydown",
-function(event) {
+    "keydown",
+    function(event) {
 
 
-    const key =
-    event.key;
+        const key =
+        event.key;
 
 
-    if (
-    key >= "0" &&
-    key <= "9"
-    ) {
+        if (
+            key >= "0" &&
+            key <= "9"
+        ) {
 
-        addValue(key);
+            addValue(key);
+
+        }
+
+
+        else if (
+            key === "+" ||
+            key === "-" ||
+            key === "%" ||
+            key === "(" ||
+            key === ")"
+        ) {
+
+            addValue(key);
+
+        }
+
+
+        else if (
+            key === "*"
+        ) {
+
+            addValue("×");
+
+        }
+
+
+        else if (
+            key === "/"
+        ) {
+
+            addValue("÷");
+
+        }
+
+
+        else if (
+            key === "." ||
+            key === ","
+        ) {
+
+            addValue(",");
+
+        }
+
+
+        else if (
+            key === "Enter" ||
+            key === "="
+        ) {
+
+            calculate();
+
+        }
+
+
+        else if (
+            key === "Backspace"
+        ) {
+
+            backspace();
+
+        }
+
+
+        else if (
+            key === "Escape"
+        ) {
+
+            clearAll();
+
+        }
 
     }
-
-
-    else if (
-    key === "+" ||
-    key === "-" ||
-    key === "%" ||
-    key === "(" ||
-    key === ")"
-    ) {
-
-        addValue(key);
-
-    }
-
-
-    else if (key === "*") {
-
-        addValue("×");
-
-    }
-
-
-    else if (key === "/") {
-
-        addValue("÷");
-
-    }
-
-
-    else if (
-    key === "." ||
-    key === ","
-    ) {
-
-        addValue(",");
-
-    }
-
-
-    else if (
-    key === "Enter" ||
-    key === "="
-    ) {
-
-        calculate();
-
-    }
-
-
-    else if (
-    key === "Backspace"
-    ) {
-
-        backspace();
-
-    }
-
-
-    else if (
-    key === "Escape"
-    ) {
-
-        clearAll();
-
-    }
-
-});
+);
 
 
 </script>

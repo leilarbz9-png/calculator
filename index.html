@@ -124,6 +124,8 @@ body {
 }
 
 
+/* رسالة النسخ */
+
 .copy-message {
 
     position: absolute;
@@ -217,6 +219,8 @@ body {
 
     word-break: break-all;
 
+    overflow-wrap: anywhere;
+
     overflow-x: auto;
 
     white-space: nowrap;
@@ -293,6 +297,8 @@ body {
 }
 
 
+/* زر العمليات */
+
 .operator {
 
     background: #aa794d;
@@ -301,6 +307,8 @@ body {
 }
 
 
+/* زر المسح */
+
 .clear {
 
     background: #c18b63;
@@ -308,6 +316,8 @@ body {
     color: white;
 }
 
+
+/* زر الحذف */
 
 .backspace {
 
@@ -318,6 +328,8 @@ body {
     font-size: 29px;
 }
 
+
+/* زر يساوي */
 
 .equal {
 
@@ -402,8 +414,19 @@ body {
     font-size: 25px;
 
     cursor: pointer;
+
+    transition: transform 0.15s ease;
 }
 
+
+.close-history:active {
+
+    transform: scale(0.88);
+
+}
+
+
+/* عناصر السجل */
 
 .history-item {
 
@@ -415,11 +438,9 @@ body {
 
     margin: 10px 0;
 
-    cursor: pointer;
+    transition: transform 0.15s ease;
 
-    transition:
-    transform 0.15s ease,
-    filter 0.15s ease;
+    cursor: pointer;
 }
 
 
@@ -427,7 +448,12 @@ body {
 
     transform: translateX(-3px);
 
-    filter: brightness(1.05);
+}
+
+
+.history-item:active {
+
+    transform: scale(0.98);
 
 }
 
@@ -456,6 +482,8 @@ body {
 }
 
 
+/* مسح السجل */
+
 .clear-history {
 
     width: 100%;
@@ -473,6 +501,15 @@ body {
     font-size: 18px;
 
     cursor: pointer;
+
+    transition: transform 0.1s ease;
+}
+
+
+.clear-history:active {
+
+    transform: scale(0.97);
+
 }
 
 
@@ -677,6 +714,8 @@ body.dark .history-result {
 }
 
 
+/* شاشات صغيرة جدا */
+
 @media (max-width: 360px) {
 
     .calculator {
@@ -755,10 +794,13 @@ body.dark .history-result {
         <div class="top-buttons">
 
 
+            <!-- زر النسخ -->
+
             <button
             class="top-btn copy-btn"
             id="copyButton"
-            type="button">
+            type="button"
+            aria-label="نسخ النتيجة">
 
             📋
 
@@ -773,30 +815,29 @@ body.dark .history-result {
             </button>
 
 
+            <!-- الوضع الليلي -->
+
             <button
             class="top-btn"
             id="darkButton"
-            type="button">
+            type="button"
+            aria-label="الوضع الليلي">
 
             🌙
 
             </button>
 
-
         </div>
-
 
     </div>
 
 
     <div class="display">
 
-
         <div
         class="expression"
         id="expression">
         </div>
-
 
         <div
         class="result"
@@ -805,7 +846,6 @@ body.dark .history-result {
         0
 
         </div>
-
 
     </div>
 
@@ -1006,7 +1046,8 @@ body.dark .history-result {
         <button
         class="btn backspace"
         id="backspaceButton"
-        type="button">
+        type="button"
+        aria-label="حذف آخر رقم">
 
         ⌫
 
@@ -1028,14 +1069,12 @@ body.dark .history-result {
 </div>
 
 
-
 <div
 class="history-panel"
 id="historyPanel">
 
 
     <div class="history-header">
-
 
         <h2>
         سجل العمليات
@@ -1050,7 +1089,6 @@ id="historyPanel">
         ×
 
         </button>
-
 
     </div>
 
@@ -1067,19 +1105,16 @@ id="historyPanel">
 
     </button>
 
-
 </div>
 
 
-
 <script>
+
 
 let currentExpression = "";
 
 let history = [];
 
-
-/* تحميل السجل */
 
 try {
 
@@ -1123,36 +1158,26 @@ document.getElementById(
 );
 
 
-/* معرفة نوع آخر عنصر */
 
-function getLastChar() {
+/* العمليات الحسابية */
 
-    return currentExpression
-        .slice(-1);
-
-}
-
-
-/* هل آخر عنصر عملية؟ */
-
-function isOperator(char) {
+function isOperator(value) {
 
     return (
-        char === "+" ||
-        char === "-" ||
-        char === "×" ||
-        char === "÷"
+        value === "+" ||
+        value === "-" ||
+        value === "×" ||
+        value === "÷"
     );
 
 }
+
 
 
 /* إضافة قيمة */
 
 function addValue(value) {
 
-
-    /* إذا كانت هناك نتيجة سابقة */
 
     if (
 
@@ -1164,250 +1189,51 @@ function addValue(value) {
 
     ) {
 
+        currentExpression =
+        result.innerText;
+
+    }
+
+
+    if (value === ",") {
+
+        value = ".";
+
+    }
+
+
+    /*
+    منع عمليتين حسابيتين متتاليتين
+    */
+
+    if (
+        isOperator(value) &&
+        currentExpression !== ""
+    ) {
+
+        const lastChar =
+        currentExpression[
+            currentExpression.length - 1
+        ];
+
 
         if (
-            isOperator(value)
+            isOperator(lastChar)
         ) {
 
             currentExpression =
-            result.innerText;
-
-        }
-
-        else {
-
-            currentExpression = "";
-
-        }
-
-    }
-
-
-    /* الأرقام */
-
-    if (
-        value >= "0" &&
-        value <= "9"
-    ) {
-
-        currentExpression += value;
-
-    }
-
-
-    /* الفاصلة */
-
-    else if (
-        value === ","
-    ) {
-
-        let parts =
-        currentExpression.split(
-            /[+\-×÷()]/ 
-        );
-
-        let lastNumber =
-        parts[parts.length - 1];
-
-
-        if (
-            lastNumber.includes(".")
-        ) {
-
-            return;
-
-        }
-
-
-        if (
-            lastNumber === ""
-        ) {
-
-            currentExpression += "0.";
-
-        }
-
-        else {
-
-            currentExpression += ".";
+            currentExpression.slice(
+                0,
+                -1
+            );
 
         }
 
     }
 
 
-    /* العمليات */
+    currentExpression += value;
 
-    else if (
-        isOperator(value)
-    ) {
-
-
-        if (
-            currentExpression === ""
-        ) {
-
-            if (value === "-") {
-
-                currentExpression = "-";
-
-            }
-
-            else {
-
-                return;
-
-            }
-
-        }
-
-        else {
-
-            let last =
-            getLastChar();
-
-
-            if (
-                isOperator(last)
-            ) {
-
-                currentExpression =
-                currentExpression.slice(
-                    0,
-                    -1
-                ) + value;
-
-            }
-
-            else {
-
-                currentExpression += value;
-
-            }
-
-        }
-
-    }
-
-
-    /* النسبة */
-
-    else if (
-        value === "%"
-    ) {
-
-
-        let last =
-        getLastChar();
-
-
-        if (
-            last >= "0" &&
-            last <= "9"
-        ) {
-
-            currentExpression += "%";
-
-        }
-
-        else {
-
-            return;
-
-        }
-
-    }
-
-
-    /* الأقواس */
-
-    else if (
-        value === "("
-    ) {
-
-
-        if (
-            currentExpression === "" ||
-            isOperator(getLastChar()) ||
-            getLastChar() === "("
-        ) {
-
-            currentExpression += "(";
-
-        }
-
-        else {
-
-            return;
-
-        }
-
-    }
-
-
-    else if (
-        value === ")"
-    ) {
-
-
-        if (
-            currentExpression === ""
-        ) {
-
-            return;
-
-        }
-
-
-        let opens =
-        (currentExpression.match(
-            /\(/g
-        ) || []).length;
-
-
-        let closes =
-        (currentExpression.match(
-            /\)/g
-        ) || []).length;
-
-
-        if (
-            opens <= closes
-        ) {
-
-            return;
-
-        }
-
-
-        let last =
-        getLastChar();
-
-
-        if (
-            isOperator(last) ||
-            last === "("
-        ) {
-
-            return;
-
-        }
-
-
-        currentExpression += ")";
-
-    }
-
-
-    updateDisplay();
-
-}
-
-
-
-/* تحديث الشاشة */
-
-function updateDisplay() {
 
     expression.innerText =
     currentExpression.replace(
@@ -1421,8 +1247,6 @@ function updateDisplay() {
 }
 
 
-
-/* الحذف */
 
 function backspace() {
 
@@ -1453,21 +1277,20 @@ function backspace() {
 
 
 
-/* مسح */
-
 function clearAll() {
+
 
     currentExpression = "";
 
+
     expression.innerText = "";
+
 
     result.innerText = "0";
 
 }
 
 
-
-/* الحساب */
 
 function calculate() {
 
@@ -1488,16 +1311,12 @@ function calculate() {
         currentExpression;
 
 
-        /* تحويل النسب */
-
         exp =
         exp.replace(
-            /(\d+(?:\.\d+)?)%/g,
+            /(\d+(\.\d+)?)%/g,
             "($1/100)"
         );
 
-
-        /* العمليات */
 
         exp =
         exp.replace(
@@ -1513,21 +1332,8 @@ function calculate() {
         );
 
 
-        /* التحقق */
-
         if (
             !/^[0-9+\-*/().\s]+$/.test(exp)
-        ) {
-
-            throw new Error();
-
-        }
-
-
-        /* منع نهاية غير صحيحة */
-
-        if (
-            /[+\-*/.]$/.test(exp)
         ) {
 
             throw new Error();
@@ -1560,8 +1366,6 @@ function calculate() {
             )
         );
 
-
-        /* حفظ السجل */
 
         history.unshift({
 
@@ -1611,9 +1415,8 @@ function calculate() {
 
 
 
-/* فتح السجل */
-
 function openHistory() {
+
 
     document
     .getElementById(
@@ -1630,9 +1433,8 @@ function openHistory() {
 
 
 
-/* إغلاق السجل */
-
 function closeHistory() {
+
 
     document
     .getElementById(
@@ -1645,8 +1447,6 @@ function closeHistory() {
 }
 
 
-
-/* عرض السجل */
 
 function showHistory() {
 
@@ -1673,7 +1473,7 @@ function showHistory() {
 
 
     history.forEach(
-        function(item, index) {
+        function(item) {
 
 
             const div =
@@ -1712,10 +1512,8 @@ function showHistory() {
                 "click",
                 function() {
 
-
                     currentExpression =
                     item.expression;
-
 
                     expression.innerText =
                     currentExpression.replace(
@@ -1723,9 +1521,7 @@ function showHistory() {
                         ","
                     );
 
-
                     result.innerText = "";
-
 
                     closeHistory();
 
@@ -1741,8 +1537,6 @@ function showHistory() {
 }
 
 
-
-/* مسح السجل */
 
 function clearHistory() {
 
@@ -1857,4 +1651,187 @@ document
 
 
                 const value =
-                
+                button.dataset.value;
+
+
+                if (
+                    value === "C"
+                ) {
+
+                    clearAll();
+
+                    return;
+
+                }
+
+
+                if (
+                    button.id ===
+                    "backspaceButton"
+                ) {
+
+                    backspace();
+
+                    return;
+
+                }
+
+
+                if (
+                    button.id ===
+                    "equalButton"
+                ) {
+
+                    calculate();
+
+                    return;
+
+                }
+
+
+                addValue(value);
+
+            }
+        );
+
+    }
+);
+
+
+
+/* زر النسخ */
+
+copyButton.addEventListener(
+    "click",
+    copyResult
+);
+
+
+
+/* زر السجل */
+
+document
+.getElementById(
+    "historyButton"
+)
+.addEventListener(
+    "click",
+    openHistory
+);
+
+
+
+document
+.getElementById(
+    "closeHistory"
+)
+.addEventListener(
+    "click",
+    closeHistory
+);
+
+
+
+document
+.getElementById(
+    "clearHistory"
+)
+.addEventListener(
+    "click",
+    clearHistory
+);
+
+
+
+/* الوضع الليلي */
+
+document
+.getElementById(
+    "darkButton"
+)
+.addEventListener(
+    "click",
+    function() {
+
+
+        document.body.classList.toggle(
+            "dark"
+        );
+
+
+        if (
+            document.body.classList.contains(
+                "dark"
+            )
+        ) {
+
+            localStorage.setItem(
+                "calculatorDarkMode",
+                "on"
+            );
+
+        }
+
+        else {
+
+            localStorage.setItem(
+                "calculatorDarkMode",
+                "off"
+            );
+
+        }
+
+    }
+);
+
+
+
+if (
+    localStorage.getItem(
+        "calculatorDarkMode"
+    ) === "on"
+) {
+
+    document.body.classList.add(
+        "dark"
+    );
+
+}
+
+
+
+/* لوحة المفاتيح */
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+
+        const key =
+        event.key;
+
+
+        if (
+            key >= "0" &&
+            key <= "9"
+        ) {
+
+            addValue(key);
+
+        }
+
+
+        else if (
+            key === "+" ||
+            key === "-" ||
+            key === "%" ||
+            key === "(" ||
+            key === ")"
+        ) {
+
+            addValue(key);
+
+        }
+
+
+        else i
